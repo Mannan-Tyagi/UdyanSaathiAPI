@@ -1,5 +1,11 @@
-# Create your tests here.
-from DBOPS import PollutionDAO
-# Create your views here.
+import pyperclip, pyautogui
+import time
 
-PollutionDAO.get_pollution_by_date_station("2023-07-21","Secretariat, Amaravati - APPCB")
+time.sleep(5)
+for i in pyperclip.paste().split("\n"):
+    for j in i:
+        pyautogui.write(j)
+        if j in ["[", '"', "'", "("]:
+            pyautogui.press("delete")
+
+                                     
