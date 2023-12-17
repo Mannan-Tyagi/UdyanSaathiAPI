@@ -4,10 +4,10 @@ class DBConnection:
     @classmethod
     def database_connection(self):
         db_config = {
-            'host': 'localhost',
+            'host': '127.0.0.1',
             'user': 'root',
             'password': 'Impetus@123',
-            'database': 'PollutionData'
+            'database': 'UdyaanSaathiData'
         }
 
         try:

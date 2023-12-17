@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'UdyanSaathi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'PollutionData',
+        'NAME': 'UdyaanSaathiData',
         'USER': 'root',
         'PASSWORD': 'Impetus@123',
         'HOST': 'localhost',  # or the hostname where your MySQL server is running

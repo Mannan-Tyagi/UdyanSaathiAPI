@@ -8,14 +8,14 @@ from datetime import datetime, timedelta
 
 class PollutionDAO:
     @classmethod    
-    def get_pollution_by_date_station(cls, pol_date, pol_station):
+    def get_pollution_by_date_station(cls, pol_station):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
 
         query = "SELECT distinct State,Station,City,AQI,PM25,PM10,NO2,OZONE,CO,AQI_Quality,Pol_Date FROM\
-                 pollutiondata.hourlydata WHERE Station = %s and Pol_Date in\
-                 (SELECT Max(Pol_Date) FROM pollutiondata.hourlydata WHERE Station = %s)\
+                 UdyaanSaathiData.hourlydata WHERE Station = %s and Pol_Date in\
+                 (SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata WHERE Station = %s)\
         order by AQI desc\
                  limit 1;"
         cursor.execute(query, (pol_station,pol_station,))
@@ -37,7 +37,7 @@ class PollutionDAO:
             pollution_instance.AQI_Quality = row[9]
 
             # Assume that the Pol_Date is in the 10th position of the row
-            pollution_instance.Date = row[10]
+            pollution_instance.Pol_Date = row[10].strftime('%Y-%m-%d %H:%M:%S')
             
             # Call the clean method to format the Date field
             pollution_instance.clean()
@@ -57,8 +57,8 @@ class PollutionDAO:
         cursor = connection.cursor()
         stationName = '%' + stationName + '%'
         
-        query = "SELECT DISTINCT Station FROM pollutiondata.hourlydata WHERE City LIKE %s and Pol_Date in\
-                 (SELECT Max(Pol_Date) FROM pollutiondata.hourlydata WHERE City LIKE %s);"
+        query = "SELECT DISTINCT Station FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s and Pol_Date in\
+                 (SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s);"
         
        
         cursor.execute(query, (stationName,stationName,))
@@ -86,7 +86,7 @@ class PollutionDAO:
         # stationName = '%' + stationName + '%'
         
         query = "SELECT City, MAX(AQI) AS AQI, MAX(PM25) AS PM25, MAX(PM10) AS PM10, MAX(CO) AS CO, MAX(OZONE) AS OZONE, MAX(SO2) AS SO2, MAX(NO2) AS NO2, MAX(NH3) AS NH3\
-                FROM pollutiondata.udyansaathiapi_pollutoin\
+                FROM UdyaanSaathiData.pollutiondata\
                 WHERE pol_Date BETWEEN %s AND %s \
                 GROUP BY City\
                 ORDER BY AQI DESC\
@@ -127,7 +127,7 @@ class PollutionDAO:
         # stationName = '%' + stationName + '%'
         
         query = "SELECT City, Min(AQI) AS AQI, Min(PM25) AS PM25, Min(PM10) AS PM10, Min(CO) AS CO, Min(OZONE) AS OZONE, Min(SO2) AS SO2, Min(NO2) AS NO2, Min(NH3) AS NH3\
-                FROM pollutiondata.udyansaathiapi_pollutoin\
+                FROM UdyaanSaathiData.pollutiondata\
                 WHERE pol_Date BETWEEN %s AND %s\
                 GROUP BY City\
                 ORDER BY AQI asc\
@@ -167,7 +167,7 @@ class PollutionDAO:
 
         # stationName = '%' + stationName + '%'
         
-        query = "SELECT DISTINCT City, AQI,PM25,PM10,CO,OZONE,SO2,NO2,NH3,Pol_Date FROM pollutiondata.udyansaathiapi_pollutoin\
+        query = "SELECT DISTINCT City, AQI,PM25,PM10,CO,OZONE,SO2,NO2,NH3,Pol_Date FROM UdyaanSaathiData.pollutiondata\
                  WHERE Station = %s\
                  AND pol_Date BETWEEN %s AND %s;"
         
@@ -187,7 +187,7 @@ class PollutionDAO:
             pollution_instance.SO2 = row[6]
             pollution_instance.NO2 = row[7]
             pollution_instance.NH3 = row[8]
-            pollution_instance.Date = row[9]
+            pollution_instance.Pol_Date = row[9].strftime('%Y-%m-%d')
             GraphData_List.append(pollution_instance)
 
         cursor.close()
@@ -219,7 +219,7 @@ class PollutionDAO:
                 ROUND(AVG(CO), 2) AS CO,\
                 ROUND(AVG(OZONE), 2) AS OZONE\
                 FROM\
-                pollutiondata.udyansaathiapi_pollutoin\
+                UdyaanSaathiData.pollutiondata\
                 WHERE\
                 Pol_Date = %s\
                 AND City IN ('Bengaluru', 'Hyderabad', 'Chennai', 'Kolkata', 'Mumbai', 'Delhi')\
@@ -262,7 +262,7 @@ class PollutionDAO:
         # stationName = '%' + stationName + '%'
         
         query = "SELECT City,AQI,Pol_Date\
-                FROM pollutiondata.udyansaathiapi_pollutoin\
+                FROM UdyaanSaathiData.pollutiondata\
                 WHERE Station = 'Secretariat, Amaravati - APPCB' AND Pol_Date LIKE '%2023%'"
         
         cursor.execute(query,())
@@ -274,7 +274,7 @@ class PollutionDAO:
             pollution_instance = AqiCalendarModel()
             pollution_instance.City = row[0]
             pollution_instance.AQI = row[1]
-            pollution_instance.Date = row[2]
+            pollution_instance.Pol_Date = row[2].strftime('%Y-%m-%d')
             AqiCalendarModel_List.append(pollution_instance)
 
         cursor.close()
