@@ -73,3 +73,12 @@ def get_AqiCalendarData(request):
     aqicalData = PollutionDAO.get_aqicaldata(pol_Station)
     serializer = AqiCalendarSerializer(aqicalData, many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_mldata(request):
+    pol_Station = request.GET.get('pol_Station')
+    Mldata =  PollutionDAO.get_mldata(pol_Station)
+    serializer = MlSerializer(Mldata, many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+    

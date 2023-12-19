@@ -281,3 +281,34 @@ class PollutionDAO:
         connection.close()
 
         return AqiCalendarModel_List
+    def get_mldata(pol_Station):
+       
+        dbconnection = DBConnection()
+        connection = dbconnection.database_connection()
+        cursor = connection.cursor()   
+
+        # stationName = '%' + stationName + '%'
+        
+        query = "SELECT * FROM udyaansaathidata.mldata\
+                 where Station = %s;"
+        
+        cursor.execute(query,(pol_Station,))
+        results = cursor.fetchall()
+
+        MLmodel_List = []
+
+        for row in results:
+            pollution_instance = MlModel()
+            pollution_instance.Station = row[0]
+            pollution_instance.Day1 = row[1]
+            pollution_instance.Day2 = row[2]
+            pollution_instance.Day3 = row[3]
+            pollution_instance.Day4 = row[4]
+            pollution_instance.Day5 = row[5]
+
+            MLmodel_List.append(pollution_instance)
+
+        cursor.close()
+        connection.close()
+
+        return MLmodel_List

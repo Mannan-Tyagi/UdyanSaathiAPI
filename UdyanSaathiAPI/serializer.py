@@ -30,3 +30,7 @@ class TopMetroCitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TopMetroCitiesModel
         fields = '__all__'
+class MlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MlModel
+        fields = '__all__'

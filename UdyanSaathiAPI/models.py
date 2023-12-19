@@ -69,4 +69,12 @@ class AqiCalendarModel(models.Model):
     City = models.CharField(max_length=255,default=" ")
     AQI = models.IntegerField(default=0)
     Pol_Date = models.CharField(max_length=500, default=" ")
+class MlModel(models.Model):
+    Station = models.CharField(max_length=255,default=" ")
+    Day1 = models.FloatField(max_length=10,default=0)
+    Day2 =models.FloatField(max_length=10,default=0)
+    Day3 = models.FloatField(max_length=10,default=0)
+    Day4 = models.FloatField(max_length=10,default=0)
+    Day5 = models.FloatField(max_length=10,default=0)
+    
 
