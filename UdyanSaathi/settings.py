@@ -79,17 +79,16 @@ WSGI_APPLICATION = 'UdyanSaathi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'udyaansaathidata',
-        'USER': 'mannan',
-        'PASSWORD': 'Khetan@123',
-        'HOST': 'mysqlmannan01.mysql.database.azure.com',
-        'PORT': '3306',  # Default port for MySQL
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'udyaansaathidata',
+#         'USER': 'root',
+#         'PASSWORD': 'admin',
+#         'HOST': 'localhost',  # or the hostname where your MySQL server is running
+#         'PORT': '3306',      # or the port on which your MySQL server is listening
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

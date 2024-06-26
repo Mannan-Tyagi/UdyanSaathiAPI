@@ -5,7 +5,7 @@ import mysql.connector
 #     
 class DBConnection:
     # keyword = "Azure"
-    keyword = "Azure"
+    keyword = "Local"
     if(keyword == "Azure"):
         @classmethod
         def database_connection(self):
