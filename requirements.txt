@@ -5,6 +5,7 @@ colorama==0.4.6
 distlib==0.3.7
 dj-database-url==2.1.0
 Django==4.2.6
+django-pyodbc-azure
 django-cors-headers==4.3.0
 django-environ==0.11.2
 djangorestframework==3.14.0
