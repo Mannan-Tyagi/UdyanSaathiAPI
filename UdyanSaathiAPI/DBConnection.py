@@ -5,11 +5,12 @@ import os
 #     
 class DBConnection:
     # keyword = "Azure"
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+  
     keyword = "Azure"
     if(keyword == "Azure"):
         @classmethod
         def database_connection(self):
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             db_config = {
                 'host': 'mysqlmannan01.mysql.database.azure.com',
                 'user': 'mannan',
