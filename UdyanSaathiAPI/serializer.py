@@ -34,3 +34,7 @@ class MlSerializer(serializers.ModelSerializer):
     class Meta:
         model = MlModel
         fields = '__all__'
+class MapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = mapDataModel
+        fields = '__all__'

@@ -30,8 +30,16 @@ def getStations(request):
     pol_Date = request.GET.get('pol_Date')
     # pol_Date = '2023-11-18 23:00:00'
     stationdata = PollutionDAO.get_stations(pol_Station,pol_Date)
+    # stationdata = "hi"
     serializer = StationSerializer(stationdata, many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getAllStations(request):
+    stationdata = PollutionDAO.get_all_stations()
+    serializer = StationSerializer(stationdata, many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 def get_Top10Cities(request):
@@ -51,18 +59,18 @@ def get_Top10LeastPollutedCities(request):
 
 @api_view(['GET'])
 def get_GraphData(request):
-    fromdate = request.GET.get('from_date')
+    # fromdate = request.GET.get('from_date')
     todate = request.GET.get('to_date')
     pol_Station = request.GET.get('pol_Station')
-    GraphData = PollutionDAO.get_graphData(pol_Station,fromdate,todate)
+    GraphData = PollutionDAO.get_graphData(pol_Station,todate)
     serializer = GraphSerializer(GraphData, many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
 @api_view(['GET'])
 def get_metrocitiesdata(request):
     # fromdate = request.GET.get('from_date')
     # todate = request.GET.get('to_date')
-    pol_Station = request.GET.get('pol_Station')
-    metroData = PollutionDAO.get_metrocitiesdata(pol_Station)
+    todate = request.GET.get('to_date')
+    metroData = PollutionDAO.get_metrocitiesdata(todate)
     serializer = TopMetroCitiesSerializer(metroData, many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
 @api_view(['GET'])
@@ -78,6 +86,11 @@ def get_mldata(request):
     pol_Station = request.GET.get('pol_Station')
     Mldata =  PollutionDAO.get_mldata(pol_Station)
     serializer = MlSerializer(Mldata, many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_mapdata(request):
+    Mapdata =  PollutionDAO.get_mapdata()
+    serializer = MapSerializer(Mapdata, many=True)
     return Response(serializer.data,status=status.HTTP_200_OK)
 
 

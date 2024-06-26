@@ -57,18 +57,19 @@ class PollutionDAO:
         cursor = connection.cursor()
         stationName = '%' + stationName + '%'
         
-        query = "SELECT DISTINCT Station FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s and Pol_Date in\
-                 (SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s);"
+        # query = "SELECT DISTINCT Station FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s and Pol_Date in\
+        #          (SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s GROUP BY Station);"
+        query = "SELECT * FROM udyaansaathidata.stations WHERE City LIKE %s"
         
-       
-        cursor.execute(query, (stationName,stationName,))
+        # cursor.execute(query, (stationName,stationName,))
+        cursor.execute(query, (stationName,))
         results = cursor.fetchall()
 
         station_list = []
 
         for row in results:
             pollution_instance = stationModel()
-            pollution_instance.Station = row[0]
+            pollution_instance.Station = row[1]
 
             station_list.append(pollution_instance)
 
@@ -77,6 +78,35 @@ class PollutionDAO:
 
         return station_list
     @classmethod
+
+    @classmethod    
+    def get_all_stations(cls, ):
+       
+        dbconnection = DBConnection()
+        connection = dbconnection.database_connection()
+        cursor = connection.cursor()
+       
+        query = "SELECT Distinct City FROM udyaansaathidata.stations "
+       
+        # cursor.execute(query, (stationName,stationName,))
+        cursor.execute(query, ())
+        results = cursor.fetchall()
+
+        all_station_list = []
+
+        for row in results:
+            pollution_instance = stationModel()
+            pollution_instance.Station = row[0]
+
+            all_station_list.append(pollution_instance)
+
+        cursor.close()
+        connection.close()
+
+        return all_station_list
+    @classmethod
+
+
     def get_Top10Cities(cls,fromdate,todate):
        
         dbconnection = DBConnection()
@@ -159,7 +189,7 @@ class PollutionDAO:
         return Top10LeastCities_List
     
     @classmethod
-    def get_graphData(cls,pol_Station,fromdate,todate):
+    def get_graphData(cls,pol_Station,todate):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -167,11 +197,32 @@ class PollutionDAO:
 
         # stationName = '%' + stationName + '%'
         
-        query = "SELECT DISTINCT City, AQI,PM25,PM10,CO,OZONE,SO2,NO2,NH3,Pol_Date FROM UdyaanSaathiData.pollutiondata\
-                 WHERE Station = %s\
-                 AND pol_Date BETWEEN %s AND %s;"
-        
-        cursor.execute(query,(pol_Station,fromdate,todate,))
+        query = "SELECT\
+                    City,\
+                    Pol_Date,\
+                    ROUND(AVG(AQI), 2) AS AQI,\
+                    ROUND(AVG(NH3), 2) AS NH3,\
+                    ROUND(AVG(PM10), 2) AS PM10,\
+                    ROUND(AVG(PM25), 2) AS PM25,\
+                    ROUND(AVG(NO2), 2) AS NO2,\
+                    ROUND(AVG(SO2), 2) AS SO2,\
+                    ROUND(AVG(CO), 2) AS CO,\
+                    ROUND(AVG(OZONE), 2) AS OZONE\
+                FROM\
+                    UdyaanSaathiData.pollutiondata\
+                WHERE\
+                    City = %s\
+                    AND Pol_Date BETWEEN (\
+                        SELECT MAX(Pol_Date) - INTERVAL %s DAY FROM UdyaanSaathiData.pollutiondata\
+                    ) AND (\
+                        SELECT MAX(Pol_Date) FROM UdyaanSaathiData.pollutiondata\
+                    )\
+                GROUP BY\
+                    City, Pol_Date\
+                ORDER BY\
+                    Pol_Date;"
+                        
+        cursor.execute(query,(pol_Station,todate,))
         results = cursor.fetchall()
 
         GraphData_List = []
@@ -179,29 +230,23 @@ class PollutionDAO:
         for row in results:
             pollution_instance = graphDataModel()
             pollution_instance.City = row[0]
-            pollution_instance.AQI = row[1]
-            pollution_instance.PM25 = row[2]
-            pollution_instance.PM10 = row[3]
-            pollution_instance.CO = row[4]
-            pollution_instance.OZONE = row[5]
-            pollution_instance.SO2 = row[6]
-            pollution_instance.NO2 = row[7]
-            pollution_instance.NH3 = row[8]
-            pollution_instance.Pol_Date = row[9].strftime('%Y-%m-%d')
+            pollution_instance.Pol_Date = row[1].strftime('%Y-%m-%d')
+            pollution_instance.AQI = row[2]
+            pollution_instance.NH3 = row[3]
+            pollution_instance.PM10 = row[4]
+            pollution_instance.PM25 = row[5]
+            pollution_instance.NO2 = row[6]
+            pollution_instance.SO2 = row[7]
+            pollution_instance.CO = row[8]
+            pollution_instance.OZONE = row[9]
             GraphData_List.append(pollution_instance)
 
         cursor.close()
         connection.close()
 
         return GraphData_List
-    
-    def get_metrocitiesdata(pol_Station):
-        today = datetime.now()
-
-        yesterday = today - timedelta(days=1)
-
-        formatted_date = yesterday.strftime('%Y-%m-%d')
-
+    @classmethod
+    def get_metrocitiesdata(cls,todate):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()   
@@ -221,7 +266,11 @@ class PollutionDAO:
                 FROM\
                 UdyaanSaathiData.pollutiondata\
                 WHERE\
-                Pol_Date = %s\
+                Pol_Date BETWEEN (\
+                        SELECT MAX(Pol_Date) - INTERVAL %s DAY FROM UdyaanSaathiData.pollutiondata\
+                    ) AND (\
+                        SELECT MAX(Pol_Date) FROM UdyaanSaathiData.pollutiondata\
+                    )\
                 AND City IN ('Bengaluru', 'Hyderabad', 'Chennai', 'Kolkata', 'Mumbai', 'Delhi')\
                 GROUP BY\
                 City\
@@ -229,7 +278,7 @@ class PollutionDAO:
                 AQI DESC;"
         
        
-        cursor.execute(query,(formatted_date,))
+        cursor.execute(query,(todate,))
         results = cursor.fetchall()
 
         TopMetroCitiesModel_List = []
@@ -254,25 +303,26 @@ class PollutionDAO:
         return TopMetroCitiesModel_List
     @classmethod
     def get_aqicaldata(cls,pol_Station):
-       
+        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()   
 
         # stationName = '%' + stationName + '%'
         
-        query = "SELECT City,AQI,Pol_Date\
+        query = "SELECT distinct Station,AQI,Pol_Date\
                 FROM UdyaanSaathiData.pollutiondata\
-                WHERE Station = 'Secretariat, Amaravati - APPCB' AND Pol_Date LIKE '%2023%'"
+                WHERE Station = %s\
+                order by pol_date"
         
-        cursor.execute(query,())
+        cursor.execute(query,(pol_Station,))
         results = cursor.fetchall()
 
         AqiCalendarModel_List = []
 
         for row in results:
             pollution_instance = AqiCalendarModel()
-            pollution_instance.City = row[0]
+            pollution_instance.Station = row[0]
             pollution_instance.AQI = row[1]
             pollution_instance.Pol_Date = row[2].strftime('%Y-%m-%d')
             AqiCalendarModel_List.append(pollution_instance)
@@ -312,3 +362,44 @@ class PollutionDAO:
         connection.close()
 
         return MLmodel_List
+    
+
+    @classmethod    
+    def get_mapdata(cls):
+        dbconnection = DBConnection()
+        connection = dbconnection.database_connection()
+        cursor = connection.cursor()
+
+        query = "SELECT State,Station,City,AQI,AQI_Quality,Longitude,Latitude,Pol_Date FROM udyaansaathidata.hourlydata where Pol_Date=(SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata);"
+        cursor.execute(query, ())
+        results = cursor.fetchall()
+
+        mapData_list = []
+
+        for row in results:
+            mapData_instance = mapDataModel()
+            mapData_instance.State = row[0]
+            mapData_instance.Station = row[1]
+            mapData_instance.City = row[2]
+            mapData_instance.AQI = row[3]
+            # mapData_instance.PM25 = row[4]
+            # mapData_instance.PM10 = row[5]
+            # mapData_instance.NO2 = row[6]
+            # mapData_instance.OZONE = row[7]
+            # mapData_instance.CO = row[8]
+            mapData_instance.AQI_Quality = row[4]
+            mapData_instance.Longitude = row[5]
+            mapData_instance.Latitude = row[6]
+
+            # Assume that the Pol_Date is in the 10th position of the row
+            mapData_instance.Pol_Date = row[7].strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Call the clean method to format the Date field
+            mapData_instance.clean()
+
+            mapData_list.append(mapData_instance)
+
+        cursor.close()
+        connection.close()
+
+        return mapData_list

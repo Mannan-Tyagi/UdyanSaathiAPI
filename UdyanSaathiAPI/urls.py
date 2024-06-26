@@ -1,17 +1,17 @@
 from django.urls import path
 from . import views
 
-# ONLY FOR DEBUG 
-#**************START*********************
-from .DBOPS import PollutionDAO
-from .serializer import *
-# pollutiondata = PollutionDAO.get_pollution_by_date_station("Knowledge Park - III, Greater Noida - UPPCB")
-Mldata =  PollutionDAO.get_mldata("Knowledge Park - III, Greater Noida - UPPCB")
-serializer = MlSerializer(Mldata, many=True)
-# serializer = MlSerializer(pollutiondata, many=True)
+# # ONLY FOR DEBUG 
+# #**************START*********************
+# from .DBOPS import PollutionDAO
+# from .serializer import *
+# # pollutiondata = PollutionDAO.get_pollution_by_date_station("Knowledge Park - III, Greater Noida - UPPCB")
+# Mldata =  PollutionDAO.get_mldata("Knowledge Park - III, Greater Noida - UPPCB")
+# serializer = MlSerializer(Mldata, many=True)
+# # serializer = MlSerializer(pollutiondata, many=True)
 
 
-#*************END**********************
+# #*************END**********************
 
 
 
@@ -25,5 +25,6 @@ urlpatterns = [
     path('get-MetroCityData/', views.get_metrocitiesdata, name="routes"),
     path('get-AqiCalData/', views.get_AqiCalendarData, name="routes"),
     path('get-MLData/', views.get_mldata, name="routes"),
-
+    path('get-MapData/', views.get_mapdata, name="routes"),
+    path('get-allStations/', views.getAllStations, name="routes"),
 ]
