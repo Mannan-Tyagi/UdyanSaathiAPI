@@ -13,7 +13,10 @@ class DBConnection:
                 'host': 'mysqlmannan01.mysql.database.azure.com',
                 'user': 'mannan',
                 'password': 'Khetan@123',
-                'database': 'udyaansaathidata'
+                'database': 'udyaansaathidata',
+                'client_flags': [mysql.connector.ClientFlag.SSL],
+                'ssl_ca': '/var/www/html/DigiCertGlobalRootG2.crt.pem'
+
             }
 
             try:
