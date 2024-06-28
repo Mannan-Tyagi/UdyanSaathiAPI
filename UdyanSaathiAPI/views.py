@@ -86,5 +86,8 @@ def get_Map_Data(request):
     serializer = MapSerializer(Mapdata, many=True) #USED DO CONVERT DATA TO JSON
     return Response(serializer.data,status=status.HTTP_200_OK) #RETURNS THE DATA 
 
-
-    
+@api_view(['GET'])
+def get_Stations_Coordinates(request):
+    StationCoordinatesData = PollutionDAO.find_StationsCoordinates()
+    serializer = StationsCoordinatesSerializer(StationCoordinatesData, many=True) #USED DO CONVERT DATA TO JSON
+    return Response(serializer.data,status=status.HTTP_200_OK) #RETURNS THE DATA 

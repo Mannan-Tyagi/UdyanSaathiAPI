@@ -39,3 +39,7 @@ class MapSerializer(serializers.ModelSerializer):
     class Meta:
         model = mapDataModel
         fields = '__all__'
+class StationsCoordinatesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StationsCoordinatesModel
+        fields = '__all__'

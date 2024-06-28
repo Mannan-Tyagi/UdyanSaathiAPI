@@ -99,5 +99,7 @@ class MlModel(models.Model):
     Day4 = models.FloatField(max_length=10,default=0)
     Day5 = models.FloatField(max_length=10,default=0)
 
-
-
+class StationsCoordinatesModel(models.Model):
+    Station = models.CharField(max_length=500, default=" ")
+    Longitude = models.FloatField(max_length=10,default=0)
+    Latitude = models.FloatField(max_length=10,default=0)

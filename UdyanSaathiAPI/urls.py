@@ -24,4 +24,5 @@ urlpatterns = [
     path('get-MLData/', views.get_ML_Data, name="routes"),
     path('get-MapData/', views.get_Map_Data, name="routes"),
     path('get-allStations/', views.get_All_Stations, name="routes"),
+    path('get-stations_coordinates/', views.get_Stations_Coordinates, name="routes"),
 ]

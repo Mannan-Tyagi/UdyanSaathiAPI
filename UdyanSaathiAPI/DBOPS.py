@@ -56,16 +56,16 @@ class PollutionDAO:
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
         stationName = '%' + stationName + '%'
-        query = "SELECT * FROM udyaansaathidata.stations WHERE City LIKE %s"
+        query = "SELECT DISTINCT Station FROM udyaansaathidata.stations WHERE City LIKE %s OR Station LIKE %s;"
         
-        cursor.execute(query, (stationName,))
+        cursor.execute(query, (stationName,stationName,))
         results = cursor.fetchall()
 
         station_list = []
 
         for row in results:
             pollution_instance = stationModel()
-            pollution_instance.Station = row[1]
+            pollution_instance.Station = row[0]
 
             station_list.append(pollution_instance)
 
@@ -352,6 +352,7 @@ class PollutionDAO:
         connection.close()
 
         return AqiCalendarModel_List
+    
     def find_ML_Data(pol_Station):
        
         dbconnection = DBConnection()
@@ -424,3 +425,27 @@ class PollutionDAO:
         connection.close()
 
         return mapData_list
+    @classmethod
+    def find_StationsCoordinates(cls):
+        dbconnection = DBConnection()
+        connection = dbconnection.database_connection()
+        cursor = connection.cursor()
+
+        query = "SELECT Station,Longitude,Latitude FROM udyaansaathidata.stations "
+        cursor.execute(query, ())
+        results = cursor.fetchall()
+        
+        StationsCoordinatesList=[]
+
+        for row in results:
+            StationsCoordinates = StationsCoordinatesModel()
+            StationsCoordinates.Station = row[0]
+            StationsCoordinates.Longitude = row[1]
+            StationsCoordinates.Latitude = row[2]
+
+            StationsCoordinatesList.append(StationsCoordinates)
+
+        cursor.close()
+        connection.close()
+
+        return StationsCoordinatesList
