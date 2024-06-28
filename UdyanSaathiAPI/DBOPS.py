@@ -392,7 +392,28 @@ class PollutionDAO:
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
 
-        query = "SELECT State,Station,City,AQI,AQI_Quality,Longitude,Latitude,Pol_Date FROM udyaansaathidata.hourlydata where Pol_Date=(SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata);"
+        query = "SELECT \
+                hd.State,\
+                hd.Station,\
+                hd.City,\
+                hd.AQI,\
+                hd.AQI_Quality,\
+                hd.Longitude,\
+                hd.Latitude,\
+                hd.Pol_Date \
+            FROM \
+                udyaansaathidata.hourlydata AS hd\
+            INNER JOIN (\
+                SELECT \
+                    Station,\
+                    MAX(Pol_Date) AS MaxPolDate \
+                FROM \
+                    udyaansaathidata.hourlydata \
+                GROUP BY \
+                    Station\
+            ) AS sub\
+            ON \
+                hd.Station = sub.Station AND hd.Pol_Date = sub.MaxPolDate;"
         cursor.execute(query, ())
         results = cursor.fetchall()
 
@@ -426,13 +447,13 @@ class PollutionDAO:
 
         return mapData_list
     @classmethod
-    def find_StationsCoordinates(cls):
+    def find_StationsCoordinates(cls,pol_station):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
 
-        query = "SELECT Station,Longitude,Latitude FROM udyaansaathidata.stations "
-        cursor.execute(query, ())
+        query = "SELECT Station,Longitude,Latitude FROM udyaansaathidata.stations where Station = %s Limit 1"
+        cursor.execute(query, (pol_station,))
         results = cursor.fetchall()
         
         StationsCoordinatesList=[]
