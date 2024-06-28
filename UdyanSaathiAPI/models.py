@@ -4,6 +4,7 @@ from datetime import datetime
 from datetime import date
 import re
 
+# ALL MODELS
 class mapDataModel(models.Model):
     State = models.CharField(max_length=255, default=" ")
     City = models.CharField(max_length=255, default=" ")
@@ -20,6 +21,7 @@ class mapDataModel(models.Model):
     AQI_Quality = models.CharField(max_length=100, default=" ")
     Longitude = models.FloatField(max_length=10,default=0)
     Latitude = models.FloatField(max_length=10,default=0)
+
 class graphDataModel(models.Model):
     City = models.CharField(max_length=255,default=" ")
     Pol_Date = models.CharField(max_length=500, default=" ")
@@ -72,6 +74,7 @@ class Top10LeastCitiesModel(models.Model):
     SO2 = models.FloatField(max_length=10,default=0)
     NO2 = models.FloatField(max_length=10,default=0)
     NH3 = models.FloatField(max_length=10,default=0)
+
 class TopMetroCitiesModel(models.Model):
     City = models.CharField(max_length=255,default=" ")
     AQI = models.IntegerField(default=0)
@@ -82,10 +85,12 @@ class TopMetroCitiesModel(models.Model):
     SO2 = models.FloatField(max_length=10,default=0)
     NO2 = models.FloatField(max_length=10,default=0)
     NH3 = models.FloatField(max_length=10,default=0)   
+
 class AqiCalendarModel(models.Model):
     Station = models.CharField(max_length=500,default=" ")
     AQI = models.IntegerField(default=0)
     Pol_Date = models.CharField(max_length=500, default=" ")
+    
 class MlModel(models.Model):
     Station = models.CharField(max_length=255,default=" ")
     Day1 = models.FloatField(max_length=10,default=0)

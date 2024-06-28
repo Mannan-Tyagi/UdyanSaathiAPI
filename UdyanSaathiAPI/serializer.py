@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from .models import *
 
+# SERIALIZERS FOR ALL MODELS USE TO CONVERT COMPLEX DATA TO JSON
 class GraphSerializer(serializers.ModelSerializer):
     class Meta:
         model = graphDataModel
@@ -18,11 +19,11 @@ class AqiCalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = AqiCalendarModel
         fields = '__all__'
-class Top10CitiesSerializer(serializers.ModelSerializer):
+class Top6CitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Top10CitiesModel
         fields = '__all__'
-class Top10LeastCitiesSerializer(serializers.ModelSerializer):
+class Top6LeastCitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Top10LeastCitiesModel
         fields = '__all__'

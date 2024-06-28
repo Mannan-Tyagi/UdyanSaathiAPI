@@ -1,13 +1,14 @@
 import mysql.connector
 import os
 
-# class DBConnection:
-#     
 class DBConnection:
+    # USING KEYWORDS TO INSTANTLY SWITCH BETWEEN AZURE AND LOCAL DATABASE
+    
     # keyword = "Azure"
-  
-    keyword = "Azure"
+    keyword = "Local"
+    # CONDITION TO CHECK THE DATABASE KEYWORD TO USE
     if(keyword == "Azure"):
+        #CONFIGURATION FOR DATABASE CONNECTION 
         @classmethod
         def database_connection(self):
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,7 @@ class DBConnection:
                 'ssl_ca': os.path.join(BASE_DIR, 'certificates', 'DigiCertGlobalRootG2.crt.pem')
 
             }
-
+            # CONNECTING TO DATABASE
             try:
                 connection = mysql.connector.connect(**db_config)
                 return connection
@@ -28,6 +29,7 @@ class DBConnection:
                 print(f"Error: {err}")
                 return None
     else:
+        #CONFIGURATION FOR DATABASE CONNECTION 
         @classmethod
         def database_connection(self):
             db_config = {
@@ -36,7 +38,7 @@ class DBConnection:
                 'password': 'admin',
                 'database': 'udyaansaathidata'
             }
-
+            # CONNECTING TO DATABASE
             try:
                 connection = mysql.connector.connect(**db_config)
                 return connection

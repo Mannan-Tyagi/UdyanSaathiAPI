@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 class PollutionDAO:
     @classmethod    
-    def get_pollution_by_date_station(cls, pol_station):
+    def find_PollutionData_By_Station(cls, pol_station):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
@@ -50,18 +50,14 @@ class PollutionDAO:
         return pollution_list
 
     @classmethod    
-    def get_stations(cls, stationName,pol_Date):
+    def find_Stations_By_City(cls, stationName):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()
         stationName = '%' + stationName + '%'
-        
-        # query = "SELECT DISTINCT Station FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s and Pol_Date in\
-        #          (SELECT Max(Pol_Date) FROM UdyaanSaathiData.hourlydata WHERE City LIKE %s GROUP BY Station);"
         query = "SELECT * FROM udyaansaathidata.stations WHERE City LIKE %s"
         
-        # cursor.execute(query, (stationName,stationName,))
         cursor.execute(query, (stationName,))
         results = cursor.fetchall()
 
@@ -77,10 +73,9 @@ class PollutionDAO:
         connection.close()
 
         return station_list
-    @classmethod
 
     @classmethod    
-    def get_all_stations(cls, ):
+    def find_All_Stations(cls):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -107,7 +102,7 @@ class PollutionDAO:
     @classmethod
 
 
-    def get_Top10Cities(cls,fromdate,todate):
+    def find_Top6_Most_Polluted_Cities(cls,todate):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -117,13 +112,26 @@ class PollutionDAO:
         
         query = "SELECT City, MAX(AQI) AS AQI, MAX(PM25) AS PM25, MAX(PM10) AS PM10, MAX(CO) AS CO, MAX(OZONE) AS OZONE, MAX(SO2) AS SO2, MAX(NO2) AS NO2, MAX(NH3) AS NH3\
                 FROM UdyaanSaathiData.pollutiondata\
-                WHERE pol_Date BETWEEN %s AND %s \
+                WHERE Pol_Date BETWEEN (\
+                        SELECT MAX(Pol_Date) - INTERVAL %s DAY FROM UdyaanSaathiData.pollutiondata\
+                    ) AND (\
+                        SELECT MAX(Pol_Date) FROM UdyaanSaathiData.pollutiondata\
+                    )\
                 GROUP BY City\
+                HAVING \
+                AQI > 0\
+                AND PM25 > 0\
+                AND PM10 > 0\
+                AND CO > 0\
+                AND OZONE > 0\
+                AND SO2 > 0\
+                AND NO2 > 0\
+                AND NH3 > 0\
                 ORDER BY AQI DESC\
                 LIMIT 6;"
         
        
-        cursor.execute(query,(fromdate,todate,))
+        cursor.execute(query,(todate,))
         results = cursor.fetchall()
 
         Top10Cities_List = []
@@ -148,7 +156,7 @@ class PollutionDAO:
         return Top10Cities_List
     
     @classmethod
-    def get_Top10LeastPollutedCities(cls,fromdate,todate):
+    def find_Top6_Least_Polluted_Cities(cls,todate):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -158,13 +166,26 @@ class PollutionDAO:
         
         query = "SELECT City, Min(AQI) AS AQI, Min(PM25) AS PM25, Min(PM10) AS PM10, Min(CO) AS CO, Min(OZONE) AS OZONE, Min(SO2) AS SO2, Min(NO2) AS NO2, Min(NH3) AS NH3\
                 FROM UdyaanSaathiData.pollutiondata\
-                WHERE pol_Date BETWEEN %s AND %s\
+                WHERE Pol_Date BETWEEN (\
+                        SELECT MAX(Pol_Date) - INTERVAL %s DAY FROM UdyaanSaathiData.pollutiondata\
+                    ) AND (\
+                        SELECT MAX(Pol_Date) FROM UdyaanSaathiData.pollutiondata\
+                    )\
                 GROUP BY City\
+                HAVING \
+                AQI > 0\
+                AND PM25 > 0\
+                AND PM10 > 0\
+                AND CO > 0\
+                AND OZONE > 0\
+                AND SO2 > 0\
+                AND NO2 > 0\
+                AND NH3 > 0\
                 ORDER BY AQI asc\
                 LIMIT 6;"
         
        
-        cursor.execute(query,(fromdate,todate,))
+        cursor.execute(query,(todate,))
         results = cursor.fetchall()
 
         Top10LeastCities_List = []
@@ -189,7 +210,7 @@ class PollutionDAO:
         return Top10LeastCities_List
     
     @classmethod
-    def get_graphData(cls,pol_Station,todate):
+    def find_GraphData(cls,pol_City,todate):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -222,7 +243,7 @@ class PollutionDAO:
                 ORDER BY\
                     Pol_Date;"
                         
-        cursor.execute(query,(pol_Station,todate,))
+        cursor.execute(query,(pol_City,todate,))
         results = cursor.fetchall()
 
         GraphData_List = []
@@ -246,7 +267,7 @@ class PollutionDAO:
 
         return GraphData_List
     @classmethod
-    def get_metrocitiesdata(cls,todate):
+    def find_MetroCities_Data(cls,todate):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()   
@@ -302,7 +323,7 @@ class PollutionDAO:
 
         return TopMetroCitiesModel_List
     @classmethod
-    def get_aqicaldata(cls,pol_Station):
+    def find_Aqi_Calendar_Data(cls,pol_Station):
         
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -331,7 +352,7 @@ class PollutionDAO:
         connection.close()
 
         return AqiCalendarModel_List
-    def get_mldata(pol_Station):
+    def find_ML_Data(pol_Station):
        
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
@@ -365,7 +386,7 @@ class PollutionDAO:
     
 
     @classmethod    
-    def get_mapdata(cls):
+    def find_Map_Data(cls):
         dbconnection = DBConnection()
         connection = dbconnection.database_connection()
         cursor = connection.cursor()

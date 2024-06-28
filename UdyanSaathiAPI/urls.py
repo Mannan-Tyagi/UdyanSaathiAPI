@@ -13,18 +13,15 @@ from . import views
 
 # #*************END**********************
 
-
-
-
 urlpatterns = [
-    path('get-pollution-by-date-station/', views.getRoutes, name="routes"),
-    path('get-stations/', views.getStations, name="routes"),
-    path('get-Top10Cities/', views.get_Top10Cities, name="routes"),
-    path('get-Top10LeastPollutedCities/', views.get_Top10LeastPollutedCities, name="routes"),
+    path('get-pollution-by-date-station/', views.get_PollutionData_By_Station, name="routes"),
+    path('get-stations/', views.get_Stations_By_City, name="routes"),
+    path('get-Top10Cities/', views.get_Top6_Most_Polluted_Cities, name="routes"),
+    path('get-Top10LeastPollutedCities/', views.get_Top6_Least_Polluted_Cities, name="routes"),
     path('get-GraphData/', views.get_GraphData, name="routes"),
-    path('get-MetroCityData/', views.get_metrocitiesdata, name="routes"),
-    path('get-AqiCalData/', views.get_AqiCalendarData, name="routes"),
-    path('get-MLData/', views.get_mldata, name="routes"),
-    path('get-MapData/', views.get_mapdata, name="routes"),
-    path('get-allStations/', views.getAllStations, name="routes"),
+    path('get-MetroCityData/', views.get_MetroCities_Data, name="routes"),
+    path('get-AqiCalData/', views.get_Aqi_Calendar_Data, name="routes"),
+    path('get-MLData/', views.get_ML_Data, name="routes"),
+    path('get-MapData/', views.get_Map_Data, name="routes"),
+    path('get-allStations/', views.get_All_Stations, name="routes"),
 ]
