@@ -5,7 +5,7 @@ class DBConnection:
     # USING KEYWORDS TO INSTANTLY SWITCH BETWEEN AZURE AND LOCAL DATABASE
     
     # keyword = "Azure"
-    keyword = "Azure"
+    keyword = "Local"
     # CONDITION TO CHECK THE DATABASE KEYWORD TO USE
     if(keyword == "Azure"):
         #CONFIGURATION FOR DATABASE CONNECTION 
