@@ -1,11 +1,19 @@
 import mysql.connector
 import os
+import environ
 
 class DBConnection:
     # USING KEYWORDS TO INSTANTLY SWITCH BETWEEN AZURE AND LOCAL DATABASE
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = environ.Env()
     
+    # Read environment variables from .env file if present
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+    # Get the database keyword from environment variable
+    keyword = env('DATABASE_KEYWORD', default='Local')
     # keyword = "Azure"
-    keyword = "Azure"
+    # keyword = "Azure"
     # CONDITION TO CHECK THE DATABASE KEYWORD TO USE
     if(keyword == "Azure"):
         #CONFIGURATION FOR DATABASE CONNECTION 
