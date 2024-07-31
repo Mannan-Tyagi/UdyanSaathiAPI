@@ -12,6 +12,7 @@ class DBConnection:
 
     # Get the database keyword from environment variable
     keyword = env('DATABASE_KEYWORD', default='Local')
+    
     # keyword = "Azure"
     # keyword = "Azure"
     # CONDITION TO CHECK THE DATABASE KEYWORD TO USE
@@ -20,8 +21,12 @@ class DBConnection:
         @classmethod
         def database_connection(self):
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            env = environ.Env()
+            # Read environment variables from .env file if present
+            environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+            # Azure_Host = env('AZURE_DATABASE_HOST')
             db_config = {
-                'host': environ.env('AZURE_DATABASE_HOST'),
+                'host': env('AZURE_DATABASE_HOST'),
                 'user': 'mannan',
                 'password': 'Khetan@123',
                 'database': 'udyaansaathidata',
