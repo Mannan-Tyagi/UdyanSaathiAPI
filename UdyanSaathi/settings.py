@@ -135,3 +135,4 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "https://udyaansaathi.onrender.com/","https://kind-field-032d6fc00.5.azurestaticapps.net/"
 ]
+

@@ -21,10 +21,10 @@ class DBConnection:
         def database_connection(self):
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             db_config = {
-                'host': 'mysqlmannan01.mysql.database.azure.com',
-                'user': 'mannan',
-                'password': 'Khetan@123',
-                'database': 'udyaansaathidata',
+                'host': environ.env('AZURE_DATABASE_HOST'),
+                'user': environ.env('AZURE_DATABASE_USER'),
+                'password': environ.env('AZURE_DATABASE_PASSWORD'),
+                'database': environ.env('DATABASE_NAME'),
                 'client_flags': [mysql.connector.ClientFlag.SSL],
                 'ssl_ca': os.path.join(BASE_DIR, 'certificates', 'DigiCertGlobalRootG2.crt.pem')
 
@@ -37,14 +37,14 @@ class DBConnection:
                 print(f"Error: {err}")
                 return None
     else:
-        #CONFIGURATION FOR DATABASE CONNECTION 
+        #CONFIGURATION FOR DATABASE CONNECTION  
         @classmethod
         def database_connection(self):
             db_config = {
-                'host': '127.0.0.1',
-                'user': 'root',
-                'password': 'admin',
-                'database': 'udyaansaathidata'
+                'host': environ.env('LOCAL_DATABASE_HOST'),
+                'user': environ.env('LOCAL_DATABASE_USER'),
+                'password': environ.env('LOCAL_DATABASE_PASSWORD'),
+                'database': environ.env('DATABASE_NAME')
             }
             # CONNECTING TO DATABASE
             try:
