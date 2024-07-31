@@ -53,3 +53,5 @@ class DBConnection:
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
                 return None
+     
+    # CLOSING THE DATABASE CONNECTION
